@@ -19,10 +19,20 @@ struct Provider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [RepositoryEntry] = []
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
+        Task {
+            let nextUpdate = Date().addingTimeInterval(43200) // 12 hours in seconds
+            
+            do {
+                var repo = try await NetworkManager.shared.getRepo(url: "https://api.github.com/repos/twostraws/HackingWithSwift")
+                let avatarImageData = await NetworkManager.shared.downloadImageData(from: repo.owner.avatarUrl)
+                repo.avatarData = avatarImageData ?? Data()
+                let entry = RepositoryEntry(date: .now, repo: repo)
+                let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
+                completion(timeline)
+            } catch {
+                print("❌ Error: \(error.localizedDescription)")
+            }
+        }
     }
 }
 
@@ -32,39 +42,21 @@ struct RepositoryEntry: TimelineEntry {
 }
 
 struct RepoWatcherWidgetEntryView : View {
+    @Environment(\.widgetFamily) var family
     var entry: RepositoryEntry
 
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                HStack {
-                    Circle()
-                        .frame(width: 50, height: 50)
-                    Text(entry.repo.name)
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .minimumScaleFactor(0.5)
-                        .lineLimit(1)
-                }
-                HStack {
-                    StatLabel(value: entry.repo.watchers, systemImageName: "star.fill")
-                    StatLabel(value: entry.repo.forks, systemImageName: "tuningfork")
-                    StatLabel(value: entry.repo.openIssues, systemImageName: "exclamationmark.triangle.fill")
-                }
+        switch family {
+        case .systemMedium:
+            RepoMediumView(repo: entry.repo)
+        case .systemLarge:
+            VStack(spacing: 36) {
+                RepoMediumView(repo: entry.repo)
+                RepoMediumView(repo: entry.repo)
             }
-            Spacer()
-            VStack {
-                Text("99")
-                    .font(.system(size: 70, weight: .bold))
-                    .frame(width: 90)
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-                Text("days ago")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
+        default:
+            EmptyView()
         }
-        .padding()
     }
 }
 
@@ -75,25 +67,8 @@ struct RepoWatcherWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             RepoWatcherWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
-        .supportedFamilies([.systemMedium])
-    }
-}
-
-
-fileprivate struct StatLabel: View {
-    let value: Int
-    let systemImageName: String
-    
-    var body: some View {
-        Label {
-            Text("\(value)")
-                .font(.footnote)
-        } icon: {
-            Image(systemName: systemImageName)
-                .foregroundColor(.green)
-        }
-        .fontWeight(.medium)
+        .configurationDisplayName("Repo Watcher")
+        .description("Keep on eye on one or two GitHub repositories.")
+        .supportedFamilies([.systemMedium, .systemLarge])
     }
 }
