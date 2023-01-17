@@ -1,6 +1,6 @@
 //
-//  RepoWatcherWidget.swift
-//  RepoWatcherWidget
+//  CompactRepoWidget.swift
+//  CompactRepoWidget
 //
 //  Created by Nizami Tagiyev on 14.01.2023.
 //
@@ -8,13 +8,13 @@
 import WidgetKit
 import SwiftUI
 
-struct Provider: TimelineProvider {
-    func placeholder(in context: Context) -> RepositoryEntry {
-        RepositoryEntry(date: Date(), repo: MockData.repoOne, bottomRepo: MockData.repoTwo)
+struct CompactRepoProvider: TimelineProvider {
+    func placeholder(in context: Context) -> CompactRepoEntry {
+        CompactRepoEntry(date: Date(), repo: MockData.repoOne, bottomRepo: MockData.repoTwo)
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (RepositoryEntry) -> ()) {
-        let entry = RepositoryEntry(date: Date(), repo: MockData.repoOne, bottomRepo: MockData.repoTwo)
+    func getSnapshot(in context: Context, completion: @escaping (CompactRepoEntry) -> ()) {
+        let entry = CompactRepoEntry(date: Date(), repo: MockData.repoOne, bottomRepo: MockData.repoTwo)
         completion(entry)
     }
 
@@ -37,7 +37,7 @@ struct Provider: TimelineProvider {
                 }
                 
                 // MARK: Create Entry Timeline
-                let entry = RepositoryEntry(date: .now, repo: repo, bottomRepo: bottomRepo)
+                let entry = CompactRepoEntry(date: .now, repo: repo, bottomRepo: bottomRepo)
                 let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
                 completion(timeline)
             } catch {
@@ -47,26 +47,23 @@ struct Provider: TimelineProvider {
     }
 }
 
-struct RepositoryEntry: TimelineEntry {
+struct CompactRepoEntry: TimelineEntry {
     let date: Date
     let repo: Repository
     let bottomRepo: Repository?
 }
 
-struct RepoWatcherWidgetEntryView : View {
+struct CompactRepoEntryView: View {
     @Environment(\.widgetFamily) var family
-    var entry: RepositoryEntry
+    var entry: CompactRepoEntry
 
     var body: some View {
         switch family {
         case .systemMedium:
             RepoMediumView(repo: entry.repo)
         case .systemLarge:
-            VStack(spacing: 36) {
-                RepoMediumView(repo: entry.repo)
-                if let unwrappedBottomRepo = entry.bottomRepo {
-                    RepoMediumView(repo: unwrappedBottomRepo)
-                }
+            if let unwrappedBottomRepo = entry.bottomRepo {
+                RepoLargeView(topRepo: entry.repo, bottomRepo: unwrappedBottomRepo)
             }
         default:
             EmptyView()
@@ -74,12 +71,12 @@ struct RepoWatcherWidgetEntryView : View {
     }
 }
 
-struct RepoWatcherWidget: Widget {
-    let kind: String = "RepoWatcherWidget"
+struct CompactRepoWidget: Widget {
+    let kind: String = "CompactRepoWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            RepoWatcherWidgetEntryView(entry: entry)
+        StaticConfiguration(kind: kind, provider: CompactRepoProvider()) { entry in
+            CompactRepoEntryView(entry: entry)
         }
         .configurationDisplayName("Repo Watcher")
         .description("Keep on eye on one or two GitHub repositories.")
