@@ -16,16 +16,6 @@ struct Repository {
     let openIssues: Int
     let pushedAt: String
     var avatarData: Data
-    
-    static let placeholder = Repository(name: "Your Repo",
-                                        owner: Owner(avatarUrl: ""),
-                                        hasIssues: true,
-                                        forks: 12,
-                                        watchers: 35,
-                                        openIssues: 3,
-                                        pushedAt: "2023-01-10T12:43:31Z",
-                                        avatarData: Data())
-    
 }
 
 struct Owner: Decodable {

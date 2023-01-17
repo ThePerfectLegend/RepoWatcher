@@ -10,11 +10,11 @@ import SwiftUI
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> RepositoryEntry {
-        RepositoryEntry(date: Date(), repo: Repository.placeholder)
+        RepositoryEntry(date: Date(), repo: MockData.repoOne, bottomRepo: MockData.repoTwo)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (RepositoryEntry) -> ()) {
-        let entry = RepositoryEntry(date: Date(), repo: Repository.placeholder)
+        let entry = RepositoryEntry(date: Date(), repo: MockData.repoOne, bottomRepo: MockData.repoTwo)
         completion(entry)
     }
 
@@ -23,10 +23,21 @@ struct Provider: TimelineProvider {
             let nextUpdate = Date().addingTimeInterval(43200) // 12 hours in seconds
             
             do {
+                // MARK: Get top repo
                 var repo = try await NetworkManager.shared.getRepo(url: "https://api.github.com/repos/twostraws/HackingWithSwift")
                 let avatarImageData = await NetworkManager.shared.downloadImageData(from: repo.owner.avatarUrl)
                 repo.avatarData = avatarImageData ?? Data()
-                let entry = RepositoryEntry(date: .now, repo: repo)
+                
+                // MARK: Get bottom repo if in large widget
+                var bottomRepo: Repository?
+                if context.family == .systemLarge {
+                    bottomRepo = try await NetworkManager.shared.getRepo(url: "https://api.github.com/repos/SwiftfulThinking/SwiftfulUI")
+                    let avatarImageData = await NetworkManager.shared.downloadImageData(from: bottomRepo!.owner.avatarUrl)
+                    bottomRepo!.avatarData = avatarImageData ?? Data()
+                }
+                
+                // MARK: Create Entry Timeline
+                let entry = RepositoryEntry(date: .now, repo: repo, bottomRepo: bottomRepo)
                 let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
                 completion(timeline)
             } catch {
@@ -39,6 +50,7 @@ struct Provider: TimelineProvider {
 struct RepositoryEntry: TimelineEntry {
     let date: Date
     let repo: Repository
+    let bottomRepo: Repository?
 }
 
 struct RepoWatcherWidgetEntryView : View {
@@ -52,7 +64,9 @@ struct RepoWatcherWidgetEntryView : View {
         case .systemLarge:
             VStack(spacing: 36) {
                 RepoMediumView(repo: entry.repo)
-                RepoMediumView(repo: entry.repo)
+                if let unwrappedBottomRepo = entry.bottomRepo {
+                    RepoMediumView(repo: unwrappedBottomRepo)
+                }
             }
         default:
             EmptyView()
