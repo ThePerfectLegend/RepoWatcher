@@ -29,11 +29,12 @@ struct ContributorMediumView: View {
                             .clipShape(Circle())
                         VStack(alignment: .leading) {
                             Text(contributor.login)
-                                .font(.caption)
+                                .font(.callout)
                                 .minimumScaleFactor(0.7)
                                 .lineLimit(1)
                             Text("\(contributor.contributions)")
-                                .font(.caption2)
+                                .font(.caption)
+                                .fontWeight(.medium)
                                 .foregroundColor(.secondary)
                         }
                     }

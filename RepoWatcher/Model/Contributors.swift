@@ -12,7 +12,7 @@ struct Contributor: Identifiable {
     let login: String
     let avatarUrl: String
     let contributions: Int
-    let avatarData: Data
+    var avatarData: Data
 }
 
 extension Contributor {
@@ -20,12 +20,12 @@ extension Contributor {
         let login: String
         let avatarUrl: String
         let contributions: Int
-    }
-    
-    var contributor: Contributor {
-        Contributor(login: login,
-                    avatarUrl: avatarUrl,
-                    contributions: contributions,
-                    avatarData: Data())
+        
+        var contributor: Contributor {
+            Contributor(login: login,
+                        avatarUrl: avatarUrl,
+                        contributions: contributions,
+                        avatarData: Data())
+        }
     }
 }

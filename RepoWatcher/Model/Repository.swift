@@ -15,6 +15,7 @@ struct Repository {
     let watchers: Int
     let openIssues: Int
     let pushedAt: String
+    let contributorsUrl: String
     var avatarData: Data
     var contributors: [Contributor] = []
 }
@@ -32,6 +33,7 @@ extension Repository {
         let watchers: Int
         let openIssues: Int
         let pushedAt: String
+        let contributorsUrl: String
         
         var repo: Repository {
             Repository(name: name,
@@ -41,6 +43,7 @@ extension Repository {
                        watchers: watchers,
                        openIssues: openIssues,
                        pushedAt: pushedAt,
+                       contributorsUrl: contributorsUrl,
                        avatarData: Data())
         }
     }
