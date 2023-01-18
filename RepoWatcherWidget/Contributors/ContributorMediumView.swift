@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ContributorMediumView: View {
+    
+    let repo: Repository
+    
     var body: some View {
         VStack {
             Text("Top Contributors")
@@ -18,25 +21,24 @@ struct ContributorMediumView: View {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2),
                       alignment: .leading,
                       spacing: 20) {
-                ForEach(0..<4) { contributor in
+                ForEach(repo.contributors) { contributor in
                     HStack {
-                        Image(uiImage: UIImage(systemName: "person.circle")!)
+                        Image(uiImage: UIImage(data: contributor.avatarData) ?? UIImage(systemName: "person.circle")!)
                             .resizable()
                             .frame(width: 44, height: 44)
                             .clipShape(Circle())
                         VStack(alignment: .leading) {
-                            Text("Name")
+                            Text(contributor.login)
                                 .font(.caption)
                                 .minimumScaleFactor(0.7)
                                 .lineLimit(1)
-                            Text("43")
+                            Text("\(contributor.contributions)")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         }
                     }
                 }
             }
-            
         }
         .padding()
     }

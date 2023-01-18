@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A86DBE892977CBBA00FEFD35 /* Contributors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86DBE882977CBBA00FEFD35 /* Contributors.swift */; };
+		A86DBE8A2977CBBA00FEFD35 /* Contributors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86DBE882977CBBA00FEFD35 /* Contributors.swift */; };
 		A878EDC12976784C004AFC18 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A878EDC02976784C004AFC18 /* MockData.swift */; };
 		A878EDC629768470004AFC18 /* RepoLargeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A878EDC529768470004AFC18 /* RepoLargeView.swift */; };
 		A878EDC829768625004AFC18 /* ContributorWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A878EDC729768625004AFC18 /* ContributorWidget.swift */; };
@@ -53,6 +55,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A86DBE882977CBBA00FEFD35 /* Contributors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contributors.swift; sourceTree = "<group>"; };
 		A878EDC02976784C004AFC18 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		A878EDC529768470004AFC18 /* RepoLargeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoLargeView.swift; sourceTree = "<group>"; };
 		A878EDC729768625004AFC18 /* ContributorWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributorWidget.swift; sourceTree = "<group>"; };
@@ -94,6 +97,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A86DBE8B2977CBE400FEFD35 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A8B71D842972912F0076F5B9 /* Repository.swift */,
+				A86DBE882977CBBA00FEFD35 /* Contributors.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		A878EDC429768433004AFC18 /* CompactRepos */ = {
 			isa = PBXGroup;
 			children = (
@@ -135,7 +147,7 @@
 			children = (
 				A8B71D5D2972890D0076F5B9 /* RepoWatcherApp.swift */,
 				A8B71D5F2972890D0076F5B9 /* ContentView.swift */,
-				A8B71D842972912F0076F5B9 /* Repository.swift */,
+				A86DBE8B2977CBE400FEFD35 /* Model */,
 				A8B71D61297289100076F5B9 /* Assets.xcassets */,
 				A8B71D63297289100076F5B9 /* Preview Content */,
 				A8B48A1029753CB700758143 /* NetworkManager.swift */,
@@ -277,6 +289,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A8B48A1129753CB700758143 /* NetworkManager.swift in Sources */,
+				A86DBE892977CBBA00FEFD35 /* Contributors.swift in Sources */,
 				A8B71D602972890D0076F5B9 /* ContentView.swift in Sources */,
 				A8B71D5E2972890D0076F5B9 /* RepoWatcherApp.swift in Sources */,
 				A8B71D852972912F0076F5B9 /* Repository.swift in Sources */,
@@ -288,6 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A878EDC629768470004AFC18 /* RepoLargeView.swift in Sources */,
+				A86DBE8A2977CBBA00FEFD35 /* Contributors.swift in Sources */,
 				A878EDC829768625004AFC18 /* ContributorWidget.swift in Sources */,
 				A878EDCA2976998E004AFC18 /* ContributorMediumView.swift in Sources */,
 				A8B48A1229753CBC00758143 /* NetworkManager.swift in Sources */,
