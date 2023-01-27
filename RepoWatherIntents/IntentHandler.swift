@@ -29,8 +29,25 @@ extension IntentHandler: SelectSingleRepoIntentIntentHandling {
         return INObjectCollection(items: repos as [NSString])
     }
     
-    //MARK: Optional default value, don't use if wanna make blank selection option
+    //MARK: Optional default value, don't use if wanna make blank selection option. Keeps widget black until selecting
     func defaultRepo(for intent: SelectSingleRepoIntentIntent) -> String? {
         return "sallen0400/swift-news"
+    }
+}
+
+extension IntentHandler: SelectTwoReposIntentHandling {
+    
+    func provideTopRepoOptionsCollection(for intent: SelectTwoReposIntent) async throws -> INObjectCollection<NSString> {
+        guard let repos = UserDefaults.shared.value(forKey: UserDefaults.repoKey) as? [String] else {
+            throw UserDefaultsError.retrieval
+        }
+        return INObjectCollection(items: repos as [NSString])
+    }
+    
+    func provideBottomRepoOptionsCollection(for intent: SelectTwoReposIntent) async throws -> INObjectCollection<NSString> {
+        guard let repos = UserDefaults.shared.value(forKey: UserDefaults.repoKey) as? [String] else {
+            throw UserDefaultsError.retrieval
+        }
+        return INObjectCollection(items: repos as [NSString])
     }
 }
