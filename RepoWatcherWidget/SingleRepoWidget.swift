@@ -8,23 +8,23 @@
 import WidgetKit
 import SwiftUI
 
-struct SingeRepoWidget: TimelineProvider {
+struct SingeRepoWidget: IntentTimelineProvider {
     func placeholder(in context: Context) -> SingleRepoEntry {
         SingleRepoEntry(date: Date(), repo: MockData.repoOne)
     }
     
-    func getSnapshot(in context: Context, completion: @escaping (SingleRepoEntry) -> Void) {
+    func getSnapshot(for configuration: SelectSingleRepoIntentIntent, in context: Context, completion: @escaping (SingleRepoEntry) -> Void) {
         let entry = SingleRepoEntry(date: Date(), repo: MockData.repoOne)
         completion(entry)
     }
     
-    func getTimeline(in context: Context, completion: @escaping (Timeline<SingleRepoEntry>) -> Void) {
+    func getTimeline(for configuration: SelectSingleRepoIntentIntent, in context: Context, completion: @escaping (Timeline<SingleRepoEntry>) -> Void) {
         Task {
             let nextUpdate = Date().addingTimeInterval(43200) // 12 hours in seconds
             
             do {
                 //MARK: Get Repo
-                var repo = try await NetworkManager.shared.getRepo(url: "https://api.github.com/repos/kodecocodes/swift-style-guide")
+                var repo = try await NetworkManager.shared.getRepo(url: "https://api.github.com/repos/" + configuration.repo!)
                 let avatarImageData = await NetworkManager.shared.downloadImageData(from: repo.owner.avatarUrl)
                 repo.avatarData = avatarImageData ?? Data()
                 
@@ -51,7 +51,6 @@ struct SingeRepoWidget: TimelineProvider {
             } catch {
                 print("❌ Error: \(error.localizedDescription)")
             }
-
         }
     }
 }
@@ -84,7 +83,7 @@ struct SingleRepoWidget: Widget {
     let kind: String = "SingleRepoWidget"
     
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: SingeRepoWidget()) { entry in
+        IntentConfiguration(kind: kind, intent: SelectSingleRepoIntentIntent.self, provider: SingeRepoWidget()) { entry in
             SingleRepoEntryView(entry: entry)
         }
         .configurationDisplayName("Single Repo")

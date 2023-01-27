@@ -68,6 +68,8 @@ fileprivate struct StatLabel: View {
         Label {
             Text("\(value)")
                 .font(.footnote)
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
         } icon: {
             Image(systemName: systemImageName)
                 .foregroundColor(.green)
