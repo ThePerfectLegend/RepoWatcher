@@ -73,6 +73,44 @@ struct SingleRepoEntryView: View {
                 RepoMediumView(repo: entry.repo)
                 ContributorMediumView(repo: entry.repo)
             }
+        case .accessoryInline:
+            Text("\(entry.repo.name) - \(entry.repo.daysSinceLastActivity)")
+        case .accessoryCircular:
+            ZStack {
+                AccessoryWidgetBackground()
+                VStack {
+                    Text("\(entry.repo.daysSinceLastActivity)")
+                        .font(.headline)
+                    Text("days")
+                        .font(.caption)
+                }
+            }
+        case .accessoryRectangular:
+            VStack(alignment: .leading) {
+                Text(entry.repo.name)
+                    .font(.headline)
+                Text("\(entry.repo.daysSinceLastActivity) days")
+                HStack {
+                    Image(systemName: "star.fill")
+                        .resizable()
+                        .frame(width: 12, height: 12)
+                        .aspectRatio(contentMode: .fit)
+                    Text("\(entry.repo.watchers)")
+                    Image(systemName: "tuningfork")
+                        .resizable()
+                        .frame(width: 12, height: 12)
+                        .aspectRatio(contentMode: .fit)
+                    Text("\(entry.repo.forks)")
+                    if entry.repo.hasIssues {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .resizable()
+                            .frame(width: 12, height: 12)
+                            .aspectRatio(contentMode: .fit)
+                        Text("\(entry.repo.openIssues)")
+                    }
+                }
+                .font(.caption)
+            }
         default:
             EmptyView()
         }
@@ -88,6 +126,6 @@ struct SingleRepoWidget: Widget {
         }
         .configurationDisplayName("Single Repo")
         .description("Track single repository.")
-        .supportedFamilies([.systemMedium, .systemLarge])
+        .supportedFamilies([.systemMedium, .systemLarge, .accessoryInline, .accessoryCircular, .accessoryRectangular])
     }
 }

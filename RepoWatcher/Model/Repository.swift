@@ -18,6 +18,13 @@ struct Repository {
     let contributorsUrl: String
     var avatarData: Data
     var contributors: [Contributor] = []
+    
+    var daysSinceLastActivity: Int {
+        let formatter = ISO8601DateFormatter()
+        let lastActivityDate = formatter.date(from: pushedAt) ?? .now
+        let daysSinceLastActivity = Calendar.current.dateComponents([.day], from: lastActivityDate, to: .now).day ?? 0
+        return daysSinceLastActivity
+    }
 }
 
 struct Owner: Decodable {
